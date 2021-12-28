@@ -278,21 +278,23 @@ public class MatrizTripletas {
     public MatrizTripletas cofactores() throws Exception{
         int filas = getConfiguracion().getF();
         int columnas = getConfiguracion().getC();
-        MatrizTripletas adjunta = new MatrizTripletas(filas, columnas);
+        MatrizTripletas cofactores = new MatrizTripletas(filas, columnas);
+        if(nombre != null) cofactores.setNombre(nombre + " Cof");
         double celda;
         for(int i=1; i<=filas; i++){
             for(int j=1; j<=columnas; j++){
                 celda = Math.pow(-1,(i+j)) * matrizSin(i, j).determinante();
-                adjunta.setCelda(i, j, celda);
+                cofactores.setCelda(i, j, celda);
             }
         }
-        return adjunta;
+        return cofactores;
     }
     
-    public MatrizTripletas traspuesta() throws Exception{
+    public MatrizTripletas traspuesta() throws Exception{        
         int filas = getConfiguracion().getF();
         int columnas = getConfiguracion().getC();
         MatrizTripletas traspuesta = new MatrizTripletas(columnas, filas);
+        if(nombre != null) traspuesta.setNombre(nombre + " Tras");
         for (int i = 1; i< tripletas.length; i++){
             Tripleta recorrido = tripletas[i];
             traspuesta.setCelda(recorrido.getC(), recorrido.getF(), recorrido.getV());
@@ -364,4 +366,10 @@ public class MatrizTripletas {
         }
         return cadena.toString();
         }
+
+    public MatrizTripletas adjunta() throws Exception {
+        MatrizTripletas adjunta = cofactores().traspuesta();
+        if(nombre != null) adjunta.setNombre(nombre + " Adj");
+        return adjunta;
+    }
 }

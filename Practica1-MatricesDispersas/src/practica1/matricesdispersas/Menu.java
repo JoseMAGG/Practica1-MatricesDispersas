@@ -312,11 +312,6 @@ public class Menu extends javax.swing.JFrame {
         matrizATbl.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         matrizATbl.setEnabled(false);
         matrizATbl.setShowGrid(true);
-        matrizATbl.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                matrizATblKeyTyped(evt);
-            }
-        });
         jScrollPane3.setViewportView(matrizATbl);
         matrizATbl.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -397,8 +392,18 @@ public class Menu extends javax.swing.JFrame {
 
         trasABtn.setText("Traspuesta A");
         trasABtn.setPreferredSize(new java.awt.Dimension(120, 23));
+        trasABtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trasABtnActionPerformed(evt);
+            }
+        });
 
         cofABtn.setText("Cofactores A");
+        cofABtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cofABtnActionPerformed(evt);
+            }
+        });
 
         adjABtn.setText("Adjunta A");
         adjABtn.addActionListener(new java.awt.event.ActionListener() {
@@ -415,11 +420,26 @@ public class Menu extends javax.swing.JFrame {
         });
 
         trasBBtn.setText("Traspuesta B");
+        trasBBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trasBBtnActionPerformed(evt);
+            }
+        });
 
         cofBBtn.setText("Cofactores B");
+        cofBBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cofBBtnActionPerformed(evt);
+            }
+        });
 
         adjBBtn.setText("Adjunta B");
         adjBBtn.setToolTipText("");
+        adjBBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adjBBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -635,11 +655,6 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_columnasTxtKeyTyped
 
-    private void matrizATblKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_matrizATblKeyTyped
-        // TODO add your handling code here:
-        soloNumeros(evt);
-    }//GEN-LAST:event_matrizATblKeyTyped
-
     private void matricesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_matricesListMouseClicked
         mostrarABtn.setEnabled(matricesList.getSelectedIndex() != -1);
         mostrarBBtn.setEnabled(matricesList.getSelectedIndex() != -1);
@@ -753,7 +768,15 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_sumarBtnActionPerformed
 
     private void adjABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adjABtnActionPerformed
-        // TODO add your handling code here:
+        try {
+            MatrizTripletas matrizAdj = matrizEnA.adjunta();
+            agregarMatriz(matrizAdj);
+            matrizAdj.mostrarEnTabla(matrizATbl);
+            matrizALbl.setText("Se muestra la matriz: " + matrizAdj.getNombre());
+            matrizEnA = matrizAdj;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }//GEN-LAST:event_adjABtnActionPerformed
 
     private void detABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detABtnActionPerformed
@@ -773,6 +796,66 @@ public class Menu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, ex);
         }
     }//GEN-LAST:event_detBBtnActionPerformed
+
+    private void trasABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trasABtnActionPerformed
+        try {
+            MatrizTripletas matrizTras = matrizEnA.traspuesta();
+            agregarMatriz(matrizTras);
+            matrizTras.mostrarEnTabla(matrizATbl);
+            matrizALbl.setText("Se muestra la matriz: " + matrizTras.getNombre());
+            matrizEnA = matrizTras;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_trasABtnActionPerformed
+
+    private void trasBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trasBBtnActionPerformed
+        try {
+            MatrizTripletas matrizTras = matrizEnB.traspuesta();
+            agregarMatriz(matrizTras);
+            matrizTras.mostrarEnTabla(matrizBTbl);
+            matrizBLbl.setText("Se muestra la matriz: " + matrizTras.getNombre());
+            matrizEnB = matrizTras;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_trasBBtnActionPerformed
+
+    private void cofABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cofABtnActionPerformed
+        try {
+            MatrizTripletas matrizCof = matrizEnA.cofactores();
+            agregarMatriz(matrizCof);
+            matrizCof.mostrarEnTabla(matrizATbl);
+            matrizALbl.setText("Se muestra la matriz: " + matrizCof.getNombre());
+            matrizEnA = matrizCof;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_cofABtnActionPerformed
+
+    private void cofBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cofBBtnActionPerformed
+        try {
+            MatrizTripletas matrizCof = matrizEnB.cofactores();
+            agregarMatriz(matrizCof);
+            matrizCof.mostrarEnTabla(matrizBTbl);
+            matrizBLbl.setText("Se muestra la matriz: " + matrizCof.getNombre());
+            matrizEnB = matrizCof;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_cofBBtnActionPerformed
+
+    private void adjBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adjBBtnActionPerformed
+        try {
+            MatrizTripletas matrizAdj = matrizEnB.adjunta();
+            agregarMatriz(matrizAdj);
+            matrizAdj.mostrarEnTabla(matrizBTbl);
+            matrizBLbl.setText("Se muestra la matriz: " + matrizAdj.getNombre());
+            matrizEnB = matrizAdj;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_adjBBtnActionPerformed
     
     public void soloNumeros(java.awt.event.KeyEvent e){
       char caracter = e.getKeyChar();
