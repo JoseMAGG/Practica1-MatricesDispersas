@@ -750,7 +750,6 @@ public class Menu extends javax.swing.JFrame {
      */
     public void soloNumeros(java.awt.event.KeyEvent e){
       char caracter = e.getKeyChar();
-
       // Verificar si la tecla pulsada no es un digito
       if(((caracter < '0') ||
          (caracter > '9')) &&
@@ -963,6 +962,7 @@ public class Menu extends javax.swing.JFrame {
             // TODO add your handling code here:
             guardarTablaEnMatriz(matrizBTbl, matrizEnB);
             System.out.println(matrizEnB);
+            JOptionPane.showMessageDialog(null, "Guardado exitosamente");
         } catch (Exception ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -975,9 +975,9 @@ public class Menu extends javax.swing.JFrame {
      */
     private void guardarABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarABtnActionPerformed
         try {
-            // TODO add your handling code here:
             guardarTablaEnMatriz(matrizATbl, matrizEnA);
             System.out.println(matrizEnA);
+            JOptionPane.showMessageDialog(null, "Guardado exitosamente");
         } catch (Exception ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
@@ -1147,8 +1147,10 @@ public class Menu extends javax.swing.JFrame {
     private void inversaABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inversaABtnActionPerformed
         try {
             MatrizTripletas inversa = matrizEnA.inversa();
+            matrizEnA = inversa;
             agregarMatriz(inversa);
-            inversa.mostrarEnTabla(matrizATbl);
+            matrizEnA.mostrarEnTabla(matrizATbl);
+            matrizALbl.setText("Se muestra la matriz: " + inversa.getNombre());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -1162,8 +1164,10 @@ public class Menu extends javax.swing.JFrame {
     private void inversaBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inversaBBtnActionPerformed
         try {
             MatrizTripletas inversa = matrizEnB.inversa();
+            matrizEnB = inversa;
             agregarMatriz(inversa);
-            inversa.mostrarEnTabla(matrizBTbl);
+            matrizEnB.mostrarEnTabla(matrizBTbl);
+            matrizBLbl.setText("Se muestra la matriz: " + inversa.getNombre());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
