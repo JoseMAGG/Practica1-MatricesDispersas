@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-/** Interfaz del programa
+/** Interfaz del programa en javax.swing.
  *
  * @author JoseMAGG
  */
