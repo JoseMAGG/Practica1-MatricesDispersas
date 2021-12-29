@@ -1017,6 +1017,7 @@ public class Menu extends javax.swing.JFrame {
             matrizAdj.mostrarEnTabla(matrizATbl);
             matrizALbl.setText("Se muestra la matriz: " + matrizAdj.getNombre());
             matrizEnA = matrizAdj;
+            detALbl.setText("Determinante:");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "La matriz debe ser cuadrada "
                     + "para calcular su adjunta");
@@ -1063,6 +1064,7 @@ public class Menu extends javax.swing.JFrame {
             matrizTras.mostrarEnTabla(matrizATbl);
             matrizALbl.setText("Se muestra la matriz: " + matrizTras.getNombre());
             matrizEnA = matrizTras;
+            detALbl.setText("Determinante:");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -1080,6 +1082,7 @@ public class Menu extends javax.swing.JFrame {
             matrizTras.mostrarEnTabla(matrizBTbl);
             matrizBLbl.setText("Se muestra la matriz: " + matrizTras.getNombre());
             matrizEnB = matrizTras;
+            detBLbl.setText("Determinante:");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -1097,6 +1100,7 @@ public class Menu extends javax.swing.JFrame {
             matrizCof.mostrarEnTabla(matrizATbl);
             matrizALbl.setText("Se muestra la matriz: " + matrizCof.getNombre());
             matrizEnA = matrizCof;
+            detALbl.setText("Determinante:");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "La matriz debe ser cuadrada "
                     + "para calcular su matriz de cofactores");
@@ -1115,6 +1119,7 @@ public class Menu extends javax.swing.JFrame {
             matrizCof.mostrarEnTabla(matrizBTbl);
             matrizBLbl.setText("Se muestra la matriz: " + matrizCof.getNombre());
             matrizEnB = matrizCof;
+            detBLbl.setText("Determinante:");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "La matriz debe ser cuadrada "
                     + "para calcular su matriz de cofactores");
@@ -1133,6 +1138,7 @@ public class Menu extends javax.swing.JFrame {
             matrizAdj.mostrarEnTabla(matrizBTbl);
             matrizBLbl.setText("Se muestra la matriz: " + matrizAdj.getNombre());
             matrizEnB = matrizAdj;
+            detBLbl.setText("Determinante:");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "La matriz debe ser cuadrada "
                     + "para calcular su adjunta");
@@ -1151,6 +1157,7 @@ public class Menu extends javax.swing.JFrame {
             agregarMatriz(inversa);
             matrizEnA.mostrarEnTabla(matrizATbl);
             matrizALbl.setText("Se muestra la matriz: " + inversa.getNombre());
+            detALbl.setText("Determinante:");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -1168,6 +1175,7 @@ public class Menu extends javax.swing.JFrame {
             agregarMatriz(inversa);
             matrizEnB.mostrarEnTabla(matrizBTbl);
             matrizBLbl.setText("Se muestra la matriz: " + inversa.getNombre());
+            detBLbl.setText("Determinante:");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
