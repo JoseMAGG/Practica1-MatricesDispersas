@@ -5,7 +5,7 @@ package practica1.matricesdispersas;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-/** Ejemplo de uso por consola.
+/** Ejemplo de uso por consola
  *
  * @author JoseMAGG
  */

@@ -24,7 +24,7 @@ package practica1.matricesdispersas;
  */
 
 /** Classe que genera objetos que guardan atributos de fila, columna y valor,
- * simulando la celda de una matriz.
+ * simulando la celda de una matriz 
  * 
  * @author Carlos Alejandro Escobar Marulanda 
  */
