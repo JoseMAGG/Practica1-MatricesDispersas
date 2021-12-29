@@ -874,6 +874,7 @@ public class Menu extends javax.swing.JFrame {
             matrizSeleccionada.mostrarEnTabla(matrizATbl);
             matrizEnA = matrizSeleccionada;
             matrizALbl.setText("Se muestra la matriz: " + matrizEnA.getNombre());
+            detALbl.setText("Determinante:");
             deshabilitarBotonesLista();
             actualizarBotonesA();
         }
@@ -907,6 +908,7 @@ public class Menu extends javax.swing.JFrame {
             matrizEnB = matrizSeleccionada;
             matrizBLbl.setText("Se muestra la matriz: " + matrizEnB.getNombre());
             deshabilitarBotonesLista();
+            detBLbl.setText("Determinante:");
             actualizarBotonesB();
         }
     }//GEN-LAST:event_mostrarBBtnActionPerformed
