@@ -7,7 +7,7 @@ package practica1.matricesdispersas;
 
 /**
  *
- * @author Adriana
+ * @author JoseMAGG
  */
 public class Main {
     public static void main(String[] args) throws Exception {

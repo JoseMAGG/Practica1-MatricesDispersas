@@ -58,10 +58,6 @@ public class Tripleta {
         this.v = v;
     }
 
-    public Tripleta clonar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public String toString(){
         return ("Fila: " + f + " Columna: " + c + " Valor: " + v);
     }

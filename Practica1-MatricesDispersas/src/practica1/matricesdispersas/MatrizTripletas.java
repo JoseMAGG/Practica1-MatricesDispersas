@@ -1,7 +1,5 @@
 package practica1.matricesdispersas;
 
-
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
@@ -11,9 +9,9 @@ import javax.swing.table.DefaultTableModel;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-/**
+/** Representación de matrices como matrices dispersas utilizando tripletas.
  *
- * @author Jose
+ * @author JoseMAGG & leomare12
  */
 public class MatrizTripletas {
     private String nombre;
@@ -21,7 +19,7 @@ public class MatrizTripletas {
 
     /**
      * Construye una matriz en tripleta vacia, con un tamaño de arreglo del
-     * unico caso y este es que la todas las posiciones esten llenas con cero
+     * unico caso y este es que todas las posiciones esten llenas con cero.
      *
      * @param f número de filas de la matriz
      * @param c número de columnas de la matriz
@@ -34,20 +32,208 @@ public class MatrizTripletas {
         this.nombre = nombre;
     }
     
+    /**
+     * Construye una matriz en tripleta vacia, con un tamaño de arreglo del
+     * unico caso y este es que todas las posiciones esten llenas con cero.
+     *
+     * @param f número de filas de la matriz
+     * @param c número de columnas de la matriz
+     */
     public MatrizTripletas(int f, int c){
         this.tripletas = new Tripleta[1];
         Tripleta configuracion = new Tripleta(f, c, 0);
         tripletas[0] = configuracion;
     }
+     
+    /** Calcula la matriz adjunta de la matriz que llama el método y se guarda
+     *  en una nueva matriz con nombre (nombre de la matriz) + "Adj".
+     * 
+     * @return Matriz adjunta
+     * @throws Exception 
+     */
+    public MatrizTripletas adjunta() throws Exception {
+        MatrizTripletas adjunta = cofactores().traspuesta();
+        if(nombre != null) adjunta.setNombre(nombre + " Adj");
+        return adjunta;
+    }
     
+    /** Calcula la matriz de cofactores de la matriz que llama el método y se guarda
+     *  en una nueva matriz con nombre (nombre de la matriz) + "Cof".
+     * 
+     * @return Matriz de cofactores
+     * @throws Exception 
+     */
+    public MatrizTripletas cofactores() throws Exception{
+        int filas = getConfiguracion().getF();
+        int columnas = getConfiguracion().getC();
+        MatrizTripletas cofactores = new MatrizTripletas(filas, columnas);
+        if(nombre != null) cofactores.setNombre(nombre + " Cof");
+        double celda;
+        for(int i=1; i<=filas; i++){
+            for(int j=1; j<=columnas; j++){
+                celda = Math.pow(-1,(i+j)) * matrizSin(i, j).determinante();
+                cofactores.setCelda(i, j, celda);
+            }
+        }
+        return cofactores;
+    }
+    
+    /** Calcula el determinante de la matriz que invoca el método siempre y cuando sea cuadrada.
+     * 
+     * @return deerminante de la matriz nxn.
+     * @throws Exception 
+     */
+    public double determinante() throws Exception{
+        Tripleta configuracion = getConfiguracion();
+        int filas = configuracion.getF();
+        if(filas != configuracion.getC()) throw new 
+            Exception("La matriz debe ser cuadrada para calcular su determinante");
+        if(filas == 1) return getValorEn(1, 1);
+        if(filas == 2) return determinante2x2();
+        if(filas == 3) return determinante3x3();
+        double det = 0;
+        for(int i = 1; i<= filas; i++){
+            det = det + (getValorEn(1, i)* Math.pow(-1,(1+i)) * matrizSin(1, i).determinante());
+        }
+        return det;
+    }
+    
+    /** Calcula el determinante de la matriz que llama al método, siempre y cuando
+     * esta tenga tamaño 2x2, 2 filas y 2 columnas.
+     * 
+     * @return determinante de la matriz 2x2
+     * @throws Exception 
+     */
+    private double determinante2x2() throws Exception{
+        Tripleta configuracion = getConfiguracion();
+        int filas = configuracion.getF();
+        if(filas != 2 || configuracion.getC() != 2) throw new 
+            Exception("La matriz debe ser de 2 filas y 2 columnas para calcular su determinante");
+        double determinante = (getValorEn(1, 1) * getValorEn(2, 2)) - (getValorEn(1, 2) * getValorEn(2, 1));
+        return determinante;
+    }
+    
+    /** Calcula el determinante de la matriz que llama al método utilizando el método de
+     * Sarrus, siempre y cuando la matriz tenga tamaño 3x3, 3 filas y 3 columnas.
+     * 
+     * @return determinante de la matriz 3x3
+     * @throws Exception 
+     */
+    private double determinante3x3() throws Exception{
+        Tripleta configuracion = getConfiguracion();
+        int filas = configuracion.getF();
+        if(filas != 3 || configuracion.getC() != 3) throw new 
+            Exception("La matriz debe ser de 3 filas y 3 columnas para calcular su determinante");
+        MatrizTripletas positivosDeterminante = new MatrizTripletas(filas, filas);
+        int aux1, aux2;
+        for(int i = 1; i <= filas; i++){
+            aux1 = 1;
+            for(int j = 1; j <= filas; j++){
+                aux2 = aux1 - i;
+                if(aux2 < 1) aux2 += filas;
+                positivosDeterminante.setCelda(aux2, i, getValorEn(i, j));
+                aux1++;
+            }
+        }
+        MatrizTripletas negativosDeterminante = new MatrizTripletas(filas, filas);
+        for(int i = 1; i <= filas; i++){
+            aux1 = filas;
+            for(int j = 1; j <= filas; j++){
+                aux2 = aux1 - i;
+                if(aux2 < 1) aux2 += filas;
+                negativosDeterminante.setCelda(aux2, i, getValorEn(i, j));
+                aux1--;
+            }
+        }
+        
+        //multiplicar las filas y sumarlas
+        double positivos = 0, negativos = 0;
+        for(int i = 1; i <= filas; i++){
+            aux1 = 1;
+            aux2 = 1;
+            for(int j = 1; j <= filas; j++){
+                aux1 *= positivosDeterminante.getValorEn(i, j);
+                aux2 *= negativosDeterminante.getValorEn(i, j);
+            }
+            positivos += aux1;
+            negativos += aux2;
+        }
+        return positivos - negativos;
+    }
+    
+    /** Devuelve la tripleta de configuración que contiene el tamaño de la matriz
+     * y el número de valores diferentes de 0.
+     * 
+     * @return configuracion
+     */
     public Tripleta getConfiguracion(){return tripletas[0];}
     
     public String getNombre() {return nombre;}
     
-    public void setNombre(String nombre){
-        if(nombre.contains("Matriz") || nombre.contains("matriz")){
-            this.nombre = nombre.substring(6).trim();
-        }else this.nombre = nombre;
+    /** Devuelve el valor en la fila y columna dadas, si no hay dato en esa posición, devuelve 0.
+     * 
+     * @param fila
+     * @param columna
+     * @return valor en la posición dada por fila y columna
+     */
+    public double getValorEn(int fila, int columna){
+        Tripleta recorrido;
+        for( int i = 1; i<tripletas.length; i++){
+            recorrido = tripletas[i];
+            if(recorrido.getF() == fila && recorrido.getC() == columna) return recorrido.getV();
+            if(recorrido.getF() > fila) break;
+        }
+        return  0;
+    }
+    
+    /** Entrega la misma matriz que invoca el método sin la fila ni la columna ingresadas como parámetros.
+     * Se le conoce como menor de la matriz.
+     * La matriz queda reducida en 1 su número de fílas y de columnas.
+     * 
+     * @param fila
+     * @param columna
+     * @return
+     * @throws Exception 
+     */
+    public MatrizTripletas matrizSin(int fila, int columna) throws Exception{
+        MatrizTripletas matrizSin = new MatrizTripletas(getConfiguracion().getF() - 1, getConfiguracion().getC() - 1);
+        for (int i=1; i<tripletas.length; i++){
+            Tripleta recorrido = tripletas[i];
+            if(recorrido.getF() != fila && recorrido.getC() != columna && recorrido.getV() != 0){
+                int filaDestino = recorrido.getF(), columDestino = recorrido.getC();
+                if(recorrido.getF() > fila) filaDestino--;
+                if(recorrido.getC() > columna) columDestino--;
+                matrizSin.setCelda(filaDestino, columDestino, recorrido.getV());
+            }
+        }
+        return matrizSin;
+    }
+    
+    /**Muestra la matriz representada en tripletas en un JTable que se pasa como
+     * parámetro, escribiendo el tamaño de la matriz en el título de la primera
+     * columna, el número de columna en el título de cada columna y el número de
+     * fila en la primera columna de cada fila.
+     * 
+     * @param tabla 
+     */
+    public void mostrarEnTabla(JTable tabla){
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        DefaultTableColumnModel columnModel = (DefaultTableColumnModel) tabla.getColumnModel();
+        int filas = getConfiguracion().getF();
+        int columnas = getConfiguracion().getC() + 1;
+        model.setRowCount(filas);
+        model.setColumnCount(columnas);
+        tabla.getColumn(columnModel.getColumn(0).getIdentifier()).setHeaderValue(filas + " x " + (columnas - 1));
+        for(int i = 0; i<filas; i++){
+            model.setValueAt(i + 1, i, 0);
+            for(int j = 1; j<columnas; j++){                
+                tabla.getColumn(columnModel.getColumn(j).getIdentifier()).setHeaderValue(j);
+                model.setValueAt(null, i, j);
+            }
+        }
+        for(int i = 1; i<tripletas.length; i++){
+            model.setValueAt(tripletas[i].getV(), tripletas[i].getF() - 1, tripletas[i].getC());
+        }
     }
     
     /**
@@ -125,26 +311,19 @@ public class MatrizTripletas {
         }
     }
     
-    public void mostrarEnTabla(JTable tabla){
-        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
-        DefaultTableColumnModel columnModel = (DefaultTableColumnModel) tabla.getColumnModel();
-        int filas = getConfiguracion().getF();
-        int columnas = getConfiguracion().getC() + 1;
-        model.setRowCount(filas);
-        model.setColumnCount(columnas);
-        tabla.getColumn(columnModel.getColumn(0).getIdentifier()).setHeaderValue(filas + " x " + (columnas - 1));
-        for(int i = 0; i<filas; i++){
-            model.setValueAt(i + 1, i, 0);
-            for(int j = 1; j<columnas; j++){                
-                tabla.getColumn(columnModel.getColumn(j).getIdentifier()).setHeaderValue(j);
-                model.setValueAt(null, i, j);
-            }
-        }
-        for(int i = 1; i<tripletas.length; i++){
-            model.setValueAt(tripletas[i].getV(), tripletas[i].getF() - 1, tripletas[i].getC());
-        }
+    public void setNombre(String nombre){
+        if(nombre.contains("Matriz") || nombre.contains("matriz")){
+            this.nombre = nombre.substring(6).trim();
+        }else this.nombre = nombre;
     }
     
+    /** Suma la matriz que llama al método con otra matriz que se pasa como
+     * parámetro, siempre y cuando ambas matrices sean de igual tamaño.
+     * 
+     * @param matrizB
+     * @return La suma de las dos matrices
+     * @throws Exception 
+     */
     public MatrizTripletas sumarMatriz(MatrizTripletas matrizB) throws Exception{
         Tripleta configuracion = getConfiguracion();
         Tripleta configuracionB = matrizB.getConfiguracion();
@@ -161,161 +340,6 @@ public class MatrizTripletas {
             return matrizSuma;
         }
         throw new Exception("Las matrices deben ser de igual tamaño para poder realizar la suma.");
-    }
-    
-    private double determinante2x2() throws Exception{
-        Tripleta configuracion = getConfiguracion();
-        int filas = configuracion.getF();
-        if(filas != 2 || configuracion.getC() != 2) throw new 
-            Exception("La matriz debe ser de 2 filas y 2 columnas para calcular su determinante");
-        double determinante = (getValorEn(1, 1) * getValorEn(2, 2)) - (getValorEn(1, 2) * getValorEn(2, 1));
-        return determinante;
-    }
-    
-    private double determinante3x3() throws Exception{
-        Tripleta configuracion = getConfiguracion();
-        int filas = configuracion.getF();
-        if(filas != 3 || configuracion.getC() != 3) throw new 
-            Exception("La matriz debe ser de 3 filas y 3 columnas para calcular su determinante");
-        MatrizTripletas positivosDeterminante = new MatrizTripletas(filas, filas);
-        int aux1, aux2;
-        for(int i = 1; i <= filas; i++){
-            aux1 = 1;
-            for(int j = 1; j <= filas; j++){
-                aux2 = aux1 - i;
-                if(aux2 < 1) aux2 += filas;
-                positivosDeterminante.setCelda(aux2, i, getValorEn(i, j));
-                aux1++;
-            }
-        }
-        MatrizTripletas negativosDeterminante = new MatrizTripletas(filas, filas);
-        for(int i = 1; i <= filas; i++){
-            aux1 = filas;
-            for(int j = 1; j <= filas; j++){
-                aux2 = aux1 - i;
-                if(aux2 < 1) aux2 += filas;
-                negativosDeterminante.setCelda(aux2, i, getValorEn(i, j));
-                aux1--;
-            }
-        }
-        
-        //multiplicar las filas y sumarlas
-        double positivos = 0, negativos = 0;
-        for(int i = 1; i <= filas; i++){
-            aux1 = 1;
-            aux2 = 1;
-            for(int j = 1; j <= filas; j++){
-                aux1 *= positivosDeterminante.getValorEn(i, j);
-                aux2 *= negativosDeterminante.getValorEn(i, j);
-            }
-            positivos += aux1;
-            negativos += aux2;
-        }
-        return positivos - negativos;
-    }
-    
-    /**
-     * Calcula el determinante de la matriz que invoca el método siempre y cuando sea cuadrada.
-     * @return
-     * @throws Exception 
-     */
-    public double determinante() throws Exception{
-        Tripleta configuracion = getConfiguracion();
-        int filas = configuracion.getF();
-        if(filas != configuracion.getC()) throw new 
-            Exception("La matriz debe ser cuadrada para calcular su determinante");
-        if(filas == 1) return getValorEn(1, 1);
-        if(filas == 2) return determinante2x2();
-        if(filas == 3) return determinante3x3();
-        double det = 0;
-        for(int i = 1; i<= filas; i++){
-            det = det + (getValorEn(1, i)* Math.pow(-1,(1+i)) * matrizSin(1, i).determinante());
-        }
-        return det;
-    }
-    
-    /**
-     * Entrega la misma matriz que invoca el método sin la fila ni la columna ingresadas como parámetros. 
-     * La matriz queda reducida en 1 su número de fílas y de columnas.
-     * @param fila
-     * @param columna
-     * @return 
-     */
-    public MatrizTripletas matrizSin(int fila, int columna) throws Exception{
-        /*int c = 1, d = 1;
-        Tripleta configuracion = getConfiguracion();
-        int filas = configuracion.getF();
-        int columnas = configuracion.getC();
-        MatrizTripletas matrizSin = new MatrizTripletas(filas - 1, columnas - 1);
-        for(int i = 1; i<=filas; i++){
-            for(int j = 1; j<=columnas; j++){
-                while( i != fila && j != columna && getValorEn(i, j) != 0){
-                    if(d == filas){
-                        c++;
-                        d = 1;
-                    }
-                    System.out.printf("c: %d, d: %d \n", c,d);
-                    System.out.println(matrizSin);
-                    matrizSin.setCelda(c, d, getValorEn(i, j));
-                    d++;
-                }
-            }
-        }*/
-        
-        MatrizTripletas matrizSin = new MatrizTripletas(getConfiguracion().getF() - 1, getConfiguracion().getC() - 1);
-        for (int i=1; i<tripletas.length; i++){
-            Tripleta recorrido = tripletas[i];
-            if(recorrido.getF() != fila && recorrido.getC() != columna && recorrido.getV() != 0){
-                int filaDestino = recorrido.getF(), columDestino = recorrido.getC();
-                if(recorrido.getF() > fila) filaDestino--;
-                if(recorrido.getC() > columna) columDestino--;
-                matrizSin.setCelda(filaDestino, columDestino, recorrido.getV());
-            }
-        }
-        return matrizSin;
-    }
-    
-    public MatrizTripletas cofactores() throws Exception{
-        int filas = getConfiguracion().getF();
-        int columnas = getConfiguracion().getC();
-        MatrizTripletas cofactores = new MatrizTripletas(filas, columnas);
-        if(nombre != null) cofactores.setNombre(nombre + " Cof");
-        double celda;
-        for(int i=1; i<=filas; i++){
-            for(int j=1; j<=columnas; j++){
-                celda = Math.pow(-1,(i+j)) * matrizSin(i, j).determinante();
-                cofactores.setCelda(i, j, celda);
-            }
-        }
-        return cofactores;
-    }
-    
-    public MatrizTripletas traspuesta() throws Exception{        
-        int filas = getConfiguracion().getF();
-        int columnas = getConfiguracion().getC();
-        MatrizTripletas traspuesta = new MatrizTripletas(columnas, filas);
-        if(nombre != null) traspuesta.setNombre(nombre + " Tras");
-        for (int i = 1; i< tripletas.length; i++){
-            Tripleta recorrido = tripletas[i];
-            traspuesta.setCelda(recorrido.getC(), recorrido.getF(), recorrido.getV());
-        }
-        return traspuesta;
-    }
-    
-    /** Devuelve el valor en la fila y columna dadas, si no hya dato en esa posición, devuelve 0
-     * 
-     * @param fila
-     * @param columna
-     * @return valor en la posición dada por fila y columna
-     */
-    public double getValorEn(int fila, int columna){
-        Tripleta recorrido;
-        for( int i = 1; i<tripletas.length; i++){
-            recorrido = tripletas[i];
-            if(recorrido.getF() == fila && recorrido.getC() == columna) return recorrido.getV();
-            if(recorrido.getF() > fila) break;
-        }
-        return  0;
     }
     
     @Override
@@ -366,10 +390,45 @@ public class MatrizTripletas {
         }
         return cadena.toString();
         }
-
-    public MatrizTripletas adjunta() throws Exception {
-        MatrizTripletas adjunta = cofactores().traspuesta();
-        if(nombre != null) adjunta.setNombre(nombre + " Adj");
-        return adjunta;
+    
+    /** Calcula la matriz traspuesta de la matriz que llama el método y se guarda
+     *  en una nueva matriz con nombre (nombre de la matriz) + "Tras".
+     * 
+     * @return Matriz traspuesta
+     * @throws Exception 
+     */
+    public MatrizTripletas traspuesta() throws Exception{        
+        int filas = getConfiguracion().getF();
+        int columnas = getConfiguracion().getC();
+        MatrizTripletas traspuesta = new MatrizTripletas(columnas, filas);
+        if(nombre != null) traspuesta.setNombre(nombre + " Tras");
+        for (int i = 1; i< tripletas.length; i++){
+            Tripleta recorrido = tripletas[i];
+            traspuesta.setCelda(recorrido.getC(), recorrido.getF(), recorrido.getV());
+        }
+        return traspuesta;
     }
+    
+    /*
+    public MatrizTripletas matrizSin(int fila, int columna) throws Exception{
+        int c = 1, d = 1;
+        Tripleta configuracion = getConfiguracion();
+        int filas = configuracion.getF();
+        int columnas = configuracion.getC();
+        MatrizTripletas matrizSin = new MatrizTripletas(filas - 1, columnas - 1);
+        for(int i = 1; i<=filas; i++){
+            for(int j = 1; j<=columnas; j++){
+                while( i != fila && j != columna && getValorEn(i, j) != 0){
+                    if(d == filas){
+                        c++;
+                        d = 1;
+                    }
+                    System.out.printf("c: %d, d: %d \n", c,d);
+                    System.out.println(matrizSin);
+                    matrizSin.setCelda(c, d, getValorEn(i, j));
+                    d++;
+                }
+            }
+        }
+    }*/
 }
