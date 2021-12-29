@@ -186,6 +186,22 @@ public class MatrizTripletas {
         return  0;
     }
     
+    /** Calcula la inversa de la matriz que llama el método y la retorna. 
+     * 
+     * @return matriz inversa
+     * @throws Exception 
+     */
+    public MatrizTripletas inversa() throws Exception{
+        double det = determinante();
+        if(det == 0) throw new Exception("No se puede invertir la matriz porque es singular (su determinante es 0).");
+        else{
+            MatrizTripletas adj = adjunta();
+            MatrizTripletas inversa = adj.multiplicarXConstante(1/det);
+            if(nombre != null) inversa.setNombre(nombre + " Inversa");
+            return inversa;
+        }
+    }
+    
     /** Entrega la misma matriz que invoca el método sin la fila ni la columna ingresadas como parámetros.
      * Se le conoce como menor de la matriz.
      * La matriz queda reducida en 1 su número de fílas y de columnas.
@@ -234,6 +250,23 @@ public class MatrizTripletas {
         for(int i = 1; i<tripletas.length; i++){
             model.setValueAt(tripletas[i].getV(), tripletas[i].getF() - 1, tripletas[i].getC());
         }
+    }
+    
+    /** Multiplica la matriz que llama el método con la constante de tipo double 
+     * que se pasa como parámetro.
+     * 
+     * @param constante
+     * @return Matriz multiplicada por la constante.
+     * @throws Exception 
+     */
+    private MatrizTripletas multiplicarXConstante(double constante) throws Exception{
+        MatrizTripletas matriz = new MatrizTripletas(getConfiguracion().getF(), getConfiguracion().getC());
+        if(constante == 0) return matriz;
+        for (int i = 1; i< tripletas.length; i++){
+            Tripleta recorrido = tripletas[i];
+            matriz.setCelda(recorrido.getF(), recorrido.getC(), constante * recorrido.getV());
+        }
+        return matriz;
     }
     
     /**

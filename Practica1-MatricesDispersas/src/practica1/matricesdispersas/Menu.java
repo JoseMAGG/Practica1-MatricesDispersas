@@ -348,6 +348,11 @@ public class Menu extends javax.swing.JFrame {
         });
 
         inversaBBtn.setText("Inversa de B");
+        inversaBBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inversaBBtnActionPerformed(evt);
+            }
+        });
 
         guardarABtn.setText("Guardar A");
         guardarABtn.addActionListener(new java.awt.event.ActionListener() {
@@ -380,6 +385,11 @@ public class Menu extends javax.swing.JFrame {
         jSeparator1.setToolTipText("");
 
         inversaABtn.setText("Inversa de A");
+        inversaABtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inversaABtnActionPerformed(evt);
+            }
+        });
 
         detABtn.setText("Determinante A");
         detABtn.addActionListener(new java.awt.event.ActionListener() {
@@ -1128,6 +1138,36 @@ public class Menu extends javax.swing.JFrame {
                     + "para calcular su adjunta");
         }
     }//GEN-LAST:event_adjBBtnActionPerformed
+
+    /** Calcula la inversa de la matriz que se esté mostrando en "Matriz A", la guarda
+     * en la lista.
+     * 
+     * @param evt 
+     */
+    private void inversaABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inversaABtnActionPerformed
+        try {
+            MatrizTripletas inversa = matrizEnA.inversa();
+            agregarMatriz(inversa);
+            inversa.mostrarEnTabla(matrizATbl);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }//GEN-LAST:event_inversaABtnActionPerformed
+
+    /** Calcula la inversa de la matriz que se esté mostrando en "Matriz B", la guarda
+     * en la lista.
+     * 
+     * @param evt 
+     */
+    private void inversaBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inversaBBtnActionPerformed
+        try {
+            MatrizTripletas inversa = matrizEnB.inversa();
+            agregarMatriz(inversa);
+            inversa.mostrarEnTabla(matrizBTbl);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }//GEN-LAST:event_inversaBBtnActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adjABtn;

@@ -49,6 +49,9 @@ public class Main {
         System.out.println("Mostrando B");
         System.out.println(matrizB);
         
+        System.out.println("Mostrando inversa");
+        System.out.println(matrizB.inversa());
+        
         System.out.println("Determinante de B: " + matrizB.determinante());
         
         System.out.println("Cofactores de B: " + matrizB.cofactores());

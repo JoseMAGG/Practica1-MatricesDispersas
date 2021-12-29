@@ -640,6 +640,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Inversa de B"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inversaBBtnActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="guardarABtn">
                       <Properties>
@@ -682,6 +685,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Inversa de A"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inversaABtnActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="detABtn">
                       <Properties>
