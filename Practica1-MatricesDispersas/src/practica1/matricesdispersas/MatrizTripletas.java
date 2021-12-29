@@ -312,9 +312,7 @@ public class MatrizTripletas {
     }
     
     public void setNombre(String nombre){
-        if(nombre.contains("Matriz") || nombre.contains("matriz")){
-            this.nombre = nombre.substring(6).trim();
-        }else this.nombre = nombre;
+        this.nombre = nombre;
     }
     
     /** Suma la matriz que llama al método con otra matriz que se pasa como

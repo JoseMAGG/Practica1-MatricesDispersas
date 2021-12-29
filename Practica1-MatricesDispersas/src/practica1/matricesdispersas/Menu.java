@@ -332,8 +332,10 @@ public class Menu extends javax.swing.JFrame {
 
         jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        matrizALbl.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         matrizALbl.setText("Se muestra la matriz: ");
 
+        matrizBLbl.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         matrizBLbl.setText("Se muestra la matriz:");
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Operaciones", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
@@ -967,7 +969,7 @@ public class Menu extends javax.swing.JFrame {
             guardarTablaEnMatriz(matrizATbl, matrizEnA);
             System.out.println(matrizEnA);
         } catch (Exception ex) {
-            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
     }//GEN-LAST:event_guardarABtnActionPerformed
 
@@ -984,9 +986,10 @@ public class Menu extends javax.swing.JFrame {
                 MatrizTripletas matrizSuma = matrizEnA.sumarMatriz(matrizEnB);
                 agregarMatriz(matrizSuma);
                 matrizSuma.mostrarEnTabla(matrizATbl);
+                matrizEnA = matrizSuma;
                 matrizALbl.setText("Se muestra la matriz: " + matrizEnA.getNombre());
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex);
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
 
         }
@@ -1005,7 +1008,8 @@ public class Menu extends javax.swing.JFrame {
             matrizALbl.setText("Se muestra la matriz: " + matrizAdj.getNombre());
             matrizEnA = matrizAdj;
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, "La matriz debe ser cuadrada "
+                    + "para calcular su adjunta");
         }
     }//GEN-LAST:event_adjABtnActionPerformed
 
@@ -1019,7 +1023,7 @@ public class Menu extends javax.swing.JFrame {
             double det = matrizEnA.determinante();
             detALbl.setText("Determinante: " + det);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }//GEN-LAST:event_detABtnActionPerformed
 
@@ -1033,7 +1037,7 @@ public class Menu extends javax.swing.JFrame {
             double det = matrizEnB.determinante();
             detBLbl.setText("Determinante: " + det);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }//GEN-LAST:event_detBBtnActionPerformed
 
@@ -1050,7 +1054,7 @@ public class Menu extends javax.swing.JFrame {
             matrizALbl.setText("Se muestra la matriz: " + matrizTras.getNombre());
             matrizEnA = matrizTras;
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }//GEN-LAST:event_trasABtnActionPerformed
 
@@ -1067,7 +1071,7 @@ public class Menu extends javax.swing.JFrame {
             matrizBLbl.setText("Se muestra la matriz: " + matrizTras.getNombre());
             matrizEnB = matrizTras;
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }//GEN-LAST:event_trasBBtnActionPerformed
 
@@ -1084,7 +1088,8 @@ public class Menu extends javax.swing.JFrame {
             matrizALbl.setText("Se muestra la matriz: " + matrizCof.getNombre());
             matrizEnA = matrizCof;
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, "La matriz debe ser cuadrada "
+                    + "para calcular su matriz de cofactores");
         }
     }//GEN-LAST:event_cofABtnActionPerformed
 
@@ -1101,7 +1106,8 @@ public class Menu extends javax.swing.JFrame {
             matrizBLbl.setText("Se muestra la matriz: " + matrizCof.getNombre());
             matrizEnB = matrizCof;
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, "La matriz debe ser cuadrada "
+                    + "para calcular su matriz de cofactores");
         }
     }//GEN-LAST:event_cofBBtnActionPerformed
 
@@ -1118,7 +1124,8 @@ public class Menu extends javax.swing.JFrame {
             matrizBLbl.setText("Se muestra la matriz: " + matrizAdj.getNombre());
             matrizEnB = matrizAdj;
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, "La matriz debe ser cuadrada "
+                    + "para calcular su adjunta");
         }
     }//GEN-LAST:event_adjBBtnActionPerformed
     
