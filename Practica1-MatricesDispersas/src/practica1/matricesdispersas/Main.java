@@ -5,9 +5,9 @@ package practica1.matricesdispersas;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-/**
+/** Ejemplo de uso por consola
  *
- * @author Adriana
+ * @author JoseMAGG
  */
 public class Main {
     public static void main(String[] args) throws Exception {

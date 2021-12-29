@@ -23,7 +23,11 @@ package practica1.matricesdispersas;
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
+/** Classe que genera objetos que guardan atributos de fila, columna y valor,
+ * simulando la celda de una matriz 
+ * 
+ * @author Carlos Alejandro Escobar Marulanda 
+ */
 public class Tripleta {
     private int f,c;
     private double v;
@@ -56,10 +60,6 @@ public class Tripleta {
 
     public void setV(double v) {
         this.v = v;
-    }
-
-    public Tripleta clonar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public String toString(){

@@ -7,23 +7,21 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-/**
+/** Interfaz del programa
  *
- * @author Adriana
+ * @author JoseMAGG
  */
 public class Menu extends javax.swing.JFrame {
     private static MatrizTripletas matrizEnA, matrizEnB;
-    private static DefaultListModel listModel = new DefaultListModel();
-    private static LinkedList<MatrizTripletas> matricesGuardadas = new LinkedList();
+    private static final DefaultListModel listModel = new DefaultListModel();
+    private static final LinkedList<MatrizTripletas> matricesGuardadas = new LinkedList();
     private static boolean info = true;
     
     /**
@@ -69,6 +67,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -615,38 +614,222 @@ public class Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /** Habilita los botones de operación de la Matriz A (En pantalla) si hay
+     * una matriz mostrandose en este espacio, si no hay matriz mostrándose, se 
+     * deshabilitan todos los botones
+     * 
+     */
+    private void actualizarBotonesA(){
+        modificarABtn.setEnabled(matrizEnA != null);
+        guardarABtn.setEnabled(matrizEnA != null);
+        inversaABtn.setEnabled(matrizEnA != null);
+        detABtn.setEnabled(matrizEnA != null);
+        trasABtn.setEnabled(matrizEnA != null);
+        cofABtn.setEnabled(matrizEnA != null);
+        adjABtn.setEnabled(matrizEnA != null);
+        sumarBtn.setEnabled(matrizEnA != null && matrizEnB != null);
+    }
+    
+    /** Habilita los botones de operación de la Matriz B (En pantalla) si hay
+     * una matriz mostrandose en este espacio, si no hay matriz mostrándose, se 
+     * deshabilitan todos los botones
+     * 
+     */
+    private void actualizarBotonesB(){
+        modificarBBtn.setEnabled(matrizEnB != null);
+        guardarBBtn.setEnabled(matrizEnB != null);
+        inversaBBtn.setEnabled(matrizEnB != null);
+        detBBtn.setEnabled(matrizEnB != null);
+        trasBBtn.setEnabled(matrizEnB != null);
+        cofBBtn.setEnabled(matrizEnB != null);
+        adjBBtn.setEnabled(matrizEnB != null);        
+        sumarBtn.setEnabled(matrizEnA != null && matrizEnB != null);
+    }
+    
+    /** Guarda una matriz ingresada como parámetro en la lista ligada de matrices
+     * Muestra el nombre de la matriz en la JList en pantalla.
+     * 
+     * @param matriz 
+     */
+    private void agregarMatriz(MatrizTripletas matriz) {
+        matricesList.setModel(listModel);
+        listModel.addElement(matriz.getNombre());
+        matricesGuardadas.add(matriz);
+    }
+    
+    /** Deshabilita los botones de "Mostrar En A", "Mostrar En B", y "Eliminar"
+     * en el espacio de "Matrices Guardadas" de la pantalla.
+     * 
+     */
+    private void deshabilitarBotonesLista(){
+        mostrarABtn.setEnabled(false);
+        mostrarBBtn.setEnabled(false);
+        eliminarBtn.setEnabled(false);
+    }
+    
+    /** Guarda la información que se ha ingresado en la tabla, que se entrega como
+     * primer parámetro, en la matriz ingresada como segundo parámetro.
+     * 
+     * @param tabla
+     * @param matriz
+     * @throws Exception 
+     */
+    public void guardarTablaEnMatriz(JTable tabla, MatrizTripletas matriz) throws Exception{
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        for(int i=0; i<model.getRowCount(); i++){
+            for(int j=1; j<model.getColumnCount(); j++){
+                Object valor = model.getValueAt(i, j);
+                if( valor != null ){
+                    if(valor.toString().trim() != null && !valor.toString().trim().isEmpty()){
+                        try{
+                            double valConvertido = Double.valueOf(valor.toString()); 
+                            if(valConvertido != 0) matriz.setCelda(i + 1, j, valConvertido);
+                        }catch(NumberFormatException e){
+                            JOptionPane.showMessageDialog(null, "Sólo puede ingresar números, "
+                                    + "signos o puntos en las celdas de la matriz");
+                            return;
+                        }
+                    }else model.setValueAt(null, i, j);
+                }
+            }
+        }
+        tabla.setEnabled(false);
+    }
+    
+    /** Habilita la tabla ingresada como parámetro para que el usuario pueda
+     * modificarla. Da un mensaje de instrucciones sólo la primera vez que se
+     * habilita una tabla en el programa.
+     * 
+     * @param tabla 
+     */
+    private void modificarTabla(JTable tabla){
+        if(info){
+            JOptionPane.showMessageDialog(null, "Sólo puede ingresar números, "
+                                    + "signos o puntos en las celdas de la matriz");
+            info = false;
+        }
+        tabla.setEnabled(true);
+    }
+    
+    /** Genera nombres automáticos para las matrices en orden alfabético desde
+     * la A hasta la Z
+     * 
+     */
+    private void nombreAutomatico() {
+        String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int i = 0;
+        if(!matricesGuardadas.isEmpty()){
+            for(MatrizTripletas elemento: matricesGuardadas){
+                for(i = 0; i < letras.length(); i++){
+                    if(elemento.getNombre().charAt(7) == letras.charAt(i)){
+                        i++;
+                        break;
+                    }
+                }
+            }
+        }
+        String nombre = "Matriz " + letras.charAt(i%26);
+        nombreTxt.setText(nombre);
+    }
+    
+    /** Valida que sólo se ingrese números en los campos de fila y columna en pantalla
+     * 
+     * @param e 
+     */
+    public void soloNumeros(java.awt.event.KeyEvent e){
+      char caracter = e.getKeyChar();
+
+      // Verificar si la tecla pulsada no es un digito
+      if(((caracter < '0') ||
+         (caracter > '9')) &&
+         (caracter != '\b' /*corresponde a BACK_SPACE*/))
+      {
+         e.consume();  // ignorar el evento de teclado
+      }
+   }
+    
+    /** Define el número de filas y de columnas como 0 de la tabla ingresada 
+     * como parámetro.
+     * 
+     * @param tabla 
+     */
+    private void vaciarTabla(JTable tabla){
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        model.setRowCount(0);
+        model.setColumnCount(0);
+    }
+    
+    /** Valida si el nombre ingresado existe para otra matriz que esté guardada.
+     * 
+     * @param nombre
+     * @return 
+     */
+    public boolean validarNombre(String nombre){
+        if(!matricesGuardadas.isEmpty()){
+            for(MatrizTripletas elemento: matricesGuardadas){
+                if(elemento.getNombre().equals(nombre)) return false;
+            }
+        }
+        return true;
+    }
+
+    /** Valida que sólo se ingrese números en el JTextField para el número de filas
+     *  También que no se ingrese más de 10 caracteres.
+     * @param e 
+     */
     private void filasTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filasTxtKeyTyped
-        // TODO add your handling code here:
         soloNumeros(evt);
         if(filasTxt.getText().length() >= 10) {
             evt.consume();
         }
     }//GEN-LAST:event_filasTxtKeyTyped
 
+    /** Crea una nueva matriz con el número de filas, número de columnas y nombre,
+     * se guarda en la lista de matrices guardadas, se muestra en la lista en pantalla
+     * y se muestra en la tabla de la "Matriz A" en pantalla.
+     * 
+     * @param evt 
+     */
     private void crearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearBtnActionPerformed
-        String nombre = nombreTxt.getText();
-        if(!validarNombre(nombre)){
-            JOptionPane.showMessageDialog(null, "Ya existe una matriz con el nombre ingresado. Por favor cámbielo");
-        }else{
-            int filas = Integer.parseInt(filasTxt.getText());
-            int columnas = Integer.parseInt(columnasTxt.getText());
-            MatrizTripletas nuevaMatriz = new MatrizTripletas(filas, columnas, nombre);
-            matrizEnA = nuevaMatriz;
-            actualizarBotonesA();
-            matrizALbl.setText("Se muestra la matriz: " + matrizEnA.getNombre());
-            agregarMatriz(nuevaMatriz);                    
-            nuevaMatriz.mostrarEnTabla(matrizATbl);
+        String nombre = nombreTxt.getText().trim();
+        if(nombre.isEmpty() || filasTxt.getText().isEmpty() || columnasTxt.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, 
+                "Debe ingresar el número de filas y de columnas que desea para la matriz "
+                        + "y un nombre para identificarla. Si el check button de \"Nombre\""
+                        + " está desmarcado se generará automáticamente.");
+            if(!nombreCB.isSelected()) nombreAutomatico();
         }
-        if(!nombreCB.isSelected()) nombreAutomatico();
+        else{
+            if(!validarNombre(nombre)) JOptionPane.showMessageDialog(null, 
+                    "Ya existe una matriz con el nombre ingresado. Por favor cámbielo");
+            else{
+                int filas = Integer.parseInt(filasTxt.getText());
+                int columnas = Integer.parseInt(columnasTxt.getText());
+                MatrizTripletas nuevaMatriz = new MatrizTripletas(filas, columnas, nombre);
+                matrizEnA = nuevaMatriz;
+                actualizarBotonesA();
+                matrizALbl.setText("Se muestra la matriz: " + matrizEnA.getNombre());
+                agregarMatriz(nuevaMatriz);                    
+                nuevaMatriz.mostrarEnTabla(matrizATbl);
+            }
+            if(!nombreCB.isSelected()) nombreAutomatico();
+        }
     }//GEN-LAST:event_crearBtnActionPerformed
 
+    /** Valida que no se ingrese más de 20 caracteres en el JTextField para el nombre
+     * 
+     * @param e 
+     */
     private void nombreTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombreTxtKeyTyped
-        // TODO add your handling code here:
         if(nombreTxt.getText().length() >= 20) {
             evt.consume();
         }
     }//GEN-LAST:event_nombreTxtKeyTyped
 
+    /** Valida que sólo se ingrese números en el JTextField para el número de columnas
+     * También que no se ingrese más de 10 caracteres.
+     * @param e 
+     */
     private void columnasTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_columnasTxtKeyTyped
         // TODO add your handling code here:
         soloNumeros(evt);
@@ -655,12 +838,22 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_columnasTxtKeyTyped
 
+    /** Activa los botones de "Matrices Guardadas" sólo si hay un elemento de la
+     * lista en pantalla seleccionado, de lo contrario, los desactiva.
+     * 
+     * @param evt 
+     */
     private void matricesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_matricesListMouseClicked
         mostrarABtn.setEnabled(matricesList.getSelectedIndex() != -1);
         mostrarBBtn.setEnabled(matricesList.getSelectedIndex() != -1);
         eliminarBtn.setEnabled(matricesList.getSelectedIndex() != -1);
     }//GEN-LAST:event_matricesListMouseClicked
 
+    /** Muestra en la tabla de "Matriz A" la matriz que esté seleccionada en la 
+     * lista en pantalla
+     * 
+     * @param evt 
+     */
     private void mostrarABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarABtnActionPerformed
         // TODO add your handling code here:
         int i = matricesList.getSelectedIndex();
@@ -676,6 +869,11 @@ public class Menu extends javax.swing.JFrame {
         
     }//GEN-LAST:event_mostrarABtnActionPerformed
 
+    /** Habilita el JTextField de "Nombre" si su check box está habilitado, 
+     * de lo contrario lo deshabilita
+     * 
+     * @param evt 
+     */
     private void nombreCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreCBActionPerformed
         // TODO add your handling code here:
         if(nombreCB.isSelected()) nombreTxt.setEnabled(true);
@@ -684,6 +882,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_nombreCBActionPerformed
 
+    /** Muestra en la tabla de "Matriz B" la matriz que esté seleccionada en la 
+     * lista en pantalla
+     * 
+     * @param evt 
+     */
     private void mostrarBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarBBtnActionPerformed
         int i = matricesList.getSelectedIndex();
         if(i == -1) JOptionPane.showMessageDialog(null, "No hay ninguna matriz seleccionada");
@@ -697,6 +900,13 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mostrarBBtnActionPerformed
 
+    /** Elimina la matriz seleccionada en la lista de la lista ligada de 
+     * matrices guardadas, borra el nombre de la matriz de la lista.
+     * Si la matriz a eliminar está siendo mostrada en alguna tabla, se elimina
+     * de la tabla también.
+     * 
+     * @param evt 
+     */
     private void eliminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBtnActionPerformed
         int i = matricesList.getSelectedIndex();
         if(i == -1) JOptionPane.showMessageDialog(null, "No hay ninguna matriz seleccionada");
@@ -730,6 +940,11 @@ public class Menu extends javax.swing.JFrame {
         modificarTabla(matrizBTbl);
     }//GEN-LAST:event_modificarBBtnActionPerformed
 
+    /** Guarda las modificaciones de la tabla de la "Matriz B" en la matriz 
+     * que se está mostrando en ella.
+     * 
+     * @param evt 
+     */
     private void guardarBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarBBtnActionPerformed
         // TODO add your handling code here:
         try {
@@ -741,6 +956,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_guardarBBtnActionPerformed
 
+    /** Guarda las modificaciones de la tabla de la "Matriz A" en la matriz 
+     * que se está mostrando en ella.
+     * 
+     * @param evt 
+     */
     private void guardarABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarABtnActionPerformed
         try {
             // TODO add your handling code here:
@@ -751,6 +971,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_guardarABtnActionPerformed
 
+    /** Suma las dos matrices que se estén mostrando en "Matriz A" y "Matriz B"
+     * y se muestra la matriz resultado en la tabla de "Matriz A".
+     * 
+     * @param evt 
+     */
     private void sumarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sumarBtnActionPerformed
         if(matrizEnA == null || matrizEnB == null) JOptionPane.showMessageDialog(null,
             "Debe haber una matriz en A y otra matriz en B para poder realizar la suma");
@@ -767,6 +992,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_sumarBtnActionPerformed
 
+    /** Calcula la matriz adjunta de la matriz que se está mostrando en "Matriz A", 
+     * se guarda en lista y se muestra en "Matriz A".
+     * 
+     * @param evt 
+     */
     private void adjABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adjABtnActionPerformed
         try {
             MatrizTripletas matrizAdj = matrizEnA.adjunta();
@@ -779,6 +1009,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_adjABtnActionPerformed
 
+    /** Calcula el determinante de la matriz que se está mostrando en "Matriz A" 
+     * y se muestra debajo de la tabla
+     * 
+     * @param evt 
+     */
     private void detABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detABtnActionPerformed
         try {
             double det = matrizEnA.determinante();
@@ -788,6 +1023,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_detABtnActionPerformed
 
+    /** Calcula el determinante de la matriz que se está mostrando en "Matriz B" 
+     * y se muestra debajo de la tabla
+     * 
+     * @param evt 
+     */
     private void detBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detBBtnActionPerformed
         try {
             double det = matrizEnB.determinante();
@@ -797,6 +1037,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_detBBtnActionPerformed
 
+    /** Calcula la traspuesta de la matriz que se está mostrando en "Matriz A", 
+     * se guarda en lista y se muestra en "Matriz A".
+     * 
+     * @param evt 
+     */
     private void trasABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trasABtnActionPerformed
         try {
             MatrizTripletas matrizTras = matrizEnA.traspuesta();
@@ -809,6 +1054,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_trasABtnActionPerformed
 
+    /** Calcula la traspuesta de la matriz que se está mostrando en "Matriz B", 
+     * se guarda en lista y se muestra en "Matriz B".
+     * 
+     * @param evt 
+     */
     private void trasBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trasBBtnActionPerformed
         try {
             MatrizTripletas matrizTras = matrizEnB.traspuesta();
@@ -821,6 +1071,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_trasBBtnActionPerformed
 
+    /** Calcula la matriz de cofactores de la matriz que se está mostrando en "Matriz A", 
+     * se guarda en lista y se muestra en "Matriz A".
+     * 
+     * @param evt 
+     */
     private void cofABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cofABtnActionPerformed
         try {
             MatrizTripletas matrizCof = matrizEnA.cofactores();
@@ -833,6 +1088,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cofABtnActionPerformed
 
+    /** Calcula la matriz de cofactores de la matriz que se está mostrando en "Matriz B", 
+     * se guarda en lista y se muestra en "Matriz B".
+     * 
+     * @param evt 
+     */
     private void cofBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cofBBtnActionPerformed
         try {
             MatrizTripletas matrizCof = matrizEnB.cofactores();
@@ -845,6 +1105,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cofBBtnActionPerformed
 
+    /** Calcula la matriz adjunta de la matriz que se está mostrando en "Matriz B", 
+     * se guarda en lista y se muestra en "Matriz B".
+     * 
+     * @param evt 
+     */
     private void adjBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adjBBtnActionPerformed
         try {
             MatrizTripletas matrizAdj = matrizEnB.adjunta();
@@ -857,118 +1122,6 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_adjBBtnActionPerformed
     
-    public void soloNumeros(java.awt.event.KeyEvent e){
-      char caracter = e.getKeyChar();
-
-      // Verificar si la tecla pulsada no es un digito
-      if(((caracter < '0') ||
-         (caracter > '9')) &&
-         (caracter != '\b' /*corresponde a BACK_SPACE*/))
-      {
-         e.consume();  // ignorar el evento de teclado
-      }
-   }
-    
-    /**
-     * @param args the command line arguments
-     */      
-    public void guardarTablaEnMatriz(JTable tabla, MatrizTripletas matriz) throws Exception{
-        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
-        for(int i=0; i<model.getRowCount(); i++){
-            for(int j=1; j<model.getColumnCount(); j++){
-                Object valor = model.getValueAt(i, j);
-                if( valor != null ){
-                    if(valor.toString().trim() != null && !valor.toString().trim().isEmpty()){
-                        try{
-                            double valConvertido = Double.valueOf(valor.toString()); 
-                            if(valConvertido != 0) matriz.setCelda(i + 1, j, valConvertido);
-                        }catch(NumberFormatException e){
-                            JOptionPane.showMessageDialog(null, "Sólo puede ingresar números, "
-                                    + "signos o puntos en las celdas de la matriz");
-                            return;
-                        }
-                    }else model.setValueAt(null, i, j);
-                }
-            }
-        }
-        tabla.setEnabled(false);
-    }
-    
-    private void deshabilitarBotonesLista(){
-        mostrarABtn.setEnabled(false);
-        mostrarBBtn.setEnabled(false);
-        eliminarBtn.setEnabled(false);
-    }
-    
-    private void actualizarBotonesA(){
-        modificarABtn.setEnabled(matrizEnA != null);
-        guardarABtn.setEnabled(matrizEnA != null);
-        inversaABtn.setEnabled(matrizEnA != null);
-        detABtn.setEnabled(matrizEnA != null);
-        trasABtn.setEnabled(matrizEnA != null);
-        cofABtn.setEnabled(matrizEnA != null);
-        adjABtn.setEnabled(matrizEnA != null);
-        sumarBtn.setEnabled(matrizEnA != null && matrizEnB != null);
-    }
-    
-    private void actualizarBotonesB(){
-        modificarBBtn.setEnabled(matrizEnB != null);
-        guardarBBtn.setEnabled(matrizEnB != null);
-        inversaBBtn.setEnabled(matrizEnB != null);
-        detBBtn.setEnabled(matrizEnB != null);
-        trasBBtn.setEnabled(matrizEnB != null);
-        cofBBtn.setEnabled(matrizEnB != null);
-        adjBBtn.setEnabled(matrizEnB != null);        
-        sumarBtn.setEnabled(matrizEnA != null && matrizEnB != null);
-    }
-    
-    public boolean validarNombre(String nombre){
-        if(!matricesGuardadas.isEmpty()){
-            for(MatrizTripletas elemento: matricesGuardadas){
-                if(elemento.getNombre().equals(nombre)) return false;
-            }
-        }
-        return true;
-    }
-    
-    private void nombreAutomatico() {
-        String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        int i = 0;
-        if(!matricesGuardadas.isEmpty()){
-            for(MatrizTripletas elemento: matricesGuardadas){
-                for(i = 0; i < letras.length(); i++){
-                    if(elemento.getNombre().charAt(7) == letras.charAt(i)){
-                        i++;
-                        break;
-                    }
-                }
-            }
-        }
-        String nombre = "Matriz " + letras.charAt(i%26);
-        nombreTxt.setText(nombre);
-    }
-    
-    private void modificarTabla(JTable tabla){
-        if(info){
-            JOptionPane.showMessageDialog(null, "Sólo puede ingresar números, "
-                                    + "signos o puntos en las celdas de la matriz");
-            info = false;
-        }
-        tabla.setEnabled(true);
-    }
-    
-    private void vaciarTabla(JTable tabla){
-        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
-        model.setRowCount(0);
-        model.setColumnCount(0);
-    }
-    
-    private void agregarMatriz(MatrizTripletas matriz) {
-        matricesList.setModel(listModel);
-        listModel.addElement(matriz.getNombre());
-        matricesGuardadas.add(matriz);
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adjABtn;
     private javax.swing.JButton adjBBtn;
