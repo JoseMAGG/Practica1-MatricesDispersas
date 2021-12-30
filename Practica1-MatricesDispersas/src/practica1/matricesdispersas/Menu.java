@@ -805,9 +805,9 @@ public class Menu extends javax.swing.JFrame {
         String nombre = nombreTxt.getText().trim();
         if(nombre.isEmpty() || filasTxt.getText().isEmpty() || columnasTxt.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, 
-                "Debe ingresar el número de filas y de columnas que desea para la matriz\n"
-                        + "y un nombre para identificarla. Si el check button de \"Nombre\"\n"
-                        + "está desmarcado se generará automáticamente.");
+                "Debe ingresar el número de filas y de columnas que desea para la matriz "
+                        + "y un nombre para identificarla. Si el check button de \"Nombre\""
+                        + " está desmarcado se generará automáticamente.");
             if(!nombreCB.isSelected()) nombreAutomatico();
         }
         else{
