@@ -704,8 +704,8 @@ public class Menu extends javax.swing.JFrame {
                                 matriz.setCelda(i + 1, j, valConvertido);
                             }
                         } catch (NumberFormatException e) {
-                            throw new Exception("Sólo puede ingresar números,\n"
-                                    + "signos o puntos en las celdas de la matriz");
+                            throw new Exception("Sólo se admiten números de tipo entero y decimal,\n"
+                                    + "positivos o negativos.");
                         }
                     } else {
                         model.setValueAt(null, i, j);
@@ -1007,6 +1007,7 @@ public class Menu extends javax.swing.JFrame {
     private void guardarBBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarBBtnActionPerformed
         try {
             guardarTablaEnMatriz(matrizBTbl, matrizEnB);
+            matrizEnB.mostrarEnTabla(matrizBTbl);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -1021,8 +1022,7 @@ public class Menu extends javax.swing.JFrame {
     private void guardarABtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarABtnActionPerformed
         try {
             guardarTablaEnMatriz(matrizATbl, matrizEnA);
-            System.out.println(matrizEnA);
-            JOptionPane.showMessageDialog(null, "Guardado exitosamente");
+            matrizEnA.mostrarEnTabla(matrizATbl);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
